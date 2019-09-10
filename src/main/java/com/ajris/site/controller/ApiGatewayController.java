@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @RestController
@@ -18,10 +19,14 @@ public class ApiGatewayController {
     }
 
     @HystrixCommand(fallbackMethod = "fallback")
-    @GetMapping("/api/coś")
+    @GetMapping("/api/blog1")
     @CrossOrigin(origins = "*")
     public Collection<Beer> goodBeers() {
         return backendClient.getSth()
                 .getContent();
+    }
+
+    public Collection<Beer> fallback() {
+        return new ArrayList<>();
     }
 }
