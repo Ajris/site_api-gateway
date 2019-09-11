@@ -1,7 +1,7 @@
 package com.ajris.site.controller;
 
 import com.ajris.site.client.BackendClient;
-import com.ajris.site.model.Beer;
+import com.ajris.site.model.Blog;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +19,14 @@ public class ApiGatewayController {
     }
 
     @HystrixCommand(fallbackMethod = "fallback")
-    @GetMapping("/api/blog1")
+    @GetMapping("/blogs")
     @CrossOrigin(origins = "*")
-    public Collection<Beer> goodBeers() {
-        return backendClient.getSth()
+    public Collection<Blog> goodBeers() {
+        return backendClient.getBlogs()
                 .getContent();
     }
 
-    public Collection<Beer> fallback() {
+    public Collection<Blog> fallback() {
         return new ArrayList<>();
     }
 }
