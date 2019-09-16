@@ -7,14 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BlogInformation {
-
-    private Long id;
+public class BlogData {
     private String title;
     private String shortText;
-
-    public BlogInformation(String title, String shortText) {
-        this.title = title;
-        this.shortText = shortText;
-    }
 }
