@@ -6,27 +6,22 @@ feign:
                 readTimeout: 160000000
     hystrix:
         enabled: false
-
-security:
+okta:
     oauth2:
-        client:
-            access-token-uri: https://dev-353373.okta.com/oauth2/default/v1/token
-            client-id: 0oa1bu2stgQnOC9g8357
-            client-secret: LKz7J1sFF0KvxWd1igiMse-Z1WvZfYckAhw180T2
-            scope: openid profile email
-            user-authorization-uri: https://dev-353373.okta.com/oauth2/default/v1/authorize
-        resource:
-            user-info-uri: https://dev-353373.okta.com/oauth2/default/v1/userinfo
-
+        groups-claim: groups
+        issuer: https://dev-353373.okta.com/oauth2/default
+        client-id: 0oa1bu2stgQnOC9g8357
+        client-secret: LKz7J1sFF0KvxWd1igiMse-Z1WvZfYckAhw180T2
 server:
     port: 8081
-
 spring:
     application:
-        name: edge-service
-
+        name: api-gateway
+    thymeleaf:
+        cache: false
 zuul:
     routes:
         backend-service:
             path: /api/**
             url: http://localhost:8080
+    sensitive-headers: Cookie, Set-Cookie
