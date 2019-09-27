@@ -1,13 +1,11 @@
 package com.ajris.site.controller;
 
 import com.ajris.site.client.BackendClient;
-import com.ajris.site.model.Beer;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ajris.site.model.BlogData;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 public class ApiGatewayController {
@@ -17,11 +15,27 @@ public class ApiGatewayController {
         this.backendClient = backendClient;
     }
 
-    @HystrixCommand(fallbackMethod = "fallback")
-    @GetMapping("/api/coś")
-    @CrossOrigin(origins = "*")
-    public Collection<Beer> goodBeers() {
-        return backendClient.getSth()
-                .getContent();
+    @GetMapping("blog")
+    @CrossOrigin
+    public ResponseEntity<List<?>> getBlogPosts() {
+        return backendClient.getBlogPosts();
+    }
+
+    @GetMapping("technology")
+    @CrossOrigin
+    public ResponseEntity<List<?>> getTechnologies() {
+        return backendClient.getTechnologies();
+    }
+
+    @GetMapping("project")
+    @CrossOrigin
+    public ResponseEntity<List<?>> getProjects() {
+        return backendClient.getProjects();
+    }
+
+    @PostMapping("blog")
+    @CrossOrigin
+    public ResponseEntity<Long> addBlogPost(@RequestBody BlogData blogData){
+        return backendClient.saveBlog(blogData);
     }
 }

@@ -1,0 +1,27 @@
+feign:
+    client:
+        config:
+            default:
+                connectTimeout: 160000000
+                readTimeout: 160000000
+    hystrix:
+        enabled: false
+okta:
+    oauth2:
+        groups-claim: groups
+        issuer: https://dev-353373.okta.com/oauth2/default
+        client-id: 0oa1bu2stgQnOC9g8357
+        client-secret: LKz7J1sFF0KvxWd1igiMse-Z1WvZfYckAhw180T2
+server:
+    port: 8081
+spring:
+    application:
+        name: api-gateway
+    thymeleaf:
+        cache: false
+zuul:
+    routes:
+        backend-service:
+            path: /api/**
+            url: http://localhost:8080
+    sensitive-headers: Cookie, Set-Cookie
