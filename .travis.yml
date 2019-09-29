@@ -1,0 +1,35 @@
+sudo: required
+
+services:
+- docker
+
+language: java
+
+jdk:
+- oraclejdk12
+
+env:
+  global:
+  - DOCKER_REPO=ajris/site_api-gateway
+  - COMMIT=${TRAVIS_COMMIT::8}
+  - secure: kADfQ1Dxn2tQu2oRXUbK8B1rh3G6uN4mkHFA0gIxHvS0U5Eq8JaYhVtftOLGwHKimeWjXQkRzK42bJ42Ha1varcIyZMobSa7iAIcXxVajRTUyo/FKMZN+vSsXR690EhaBzA2XmOh6x2yPhaXXtZnSrBF4ed0Zxz5DheCo5nSu1kDM0gHYMX/q4k0Lc09ABqJEkALAdrD6JF0q251uaj5aYUuwzF20hwpptQHMyAORvKVCacclcBC1WdsmQt1wEdtQpVr5yMafsfc76sRnKRg2tidICc0m2bPfUEt1FWj0N2HzEhL0I8GL3cHdphkPiLVL38nt6O/d88L4o70MR3R7b47N87yhTCeh1+ko/odgHTqhqQkFzd2BjZjTNwYqgr1Pl2A9ZTDRDZ19F6NwwRjHkZi1kb96z0OoPHftBR3IWGgUtBKQqoPYJyKVQdWg4aWH2TZISe+RArId+DMH6YQmhtd+JAyCD1KIGv8SnKzc8OtS05stSE2FDD5TJjuDeJHPeq65FdqKnjk42hEMp8RMVBdVIB/+y+OpgZiDnCKrmcsJchTG0ckp2YMGgBNcBerlYPY0Km16nxXA0r9sHUWyEvcSlNxul7UbocCc+KEiLw7RpWg7EWU6s5CaI/yNOi6RAlpBAFqEG9URUSNAkGYlQYukU8Lsw21hfeK25BoGb8=
+  - secure: KTn7Ciks9cuH2UJ6anPNQPTZrA+EzNt9nUbhkkeRwH46YFZUMAEzkkII1p69Aw4oAYnVxzwnSC1Fi9lgGwCtRiG81JuTurcH2ajFAGiEwIGvM14a9Jvg00K2U7+ISDPqLwDB/iYe5Ebmtr3FysQncTmGKsNAh6zNQTpLdEZYKOLRo1Q9jFEWMZhGwlk+AbQ1aJbohIX4tR4nLNHEpF4JcOx4hCJnMFPRbvb/iGoImfqRCiz2KLKNw8zvXAI+0DucNCxnu1Mc8ggd1unCqe4DjFONxjakMb62V0tnv60wKma8u3Y0LZVDK3RrA8Lgnj0e3CwMgE7DVYWr0EMs38vp25RRMShID7EUx/N+I7rUr6wEpC9T0/befZJ6VBDInhdlzTWxV2qRfUuCfLi+LVCU+NcCbH/G8TdTmZsGy9NuvkUJIrkLlqG3YTV0bJrEFydJCSdn32E7ffS3JMrJU8Ual3k9Zg/QgUuQexEI2N0uF5goL/wsXn/f8NqIZYfgg/Vzg1/EELoesAbEyGJB4EyOWbj09pzk6CH3yY6M5Qoh5IFhIiSvzGCjFoP5kV6AwD1w2roNpxrP1dPz8CBoW3162wLaJVWHFjiCgk4WocFhVBH1KF0CkpkMErjaYs3w9K2JC/OF0Wlvp87SZ6T8Vzac4/WyyZPCvk4D9qzueY6yF9Q=
+
+addons:
+  sonarcloud:
+    organization: ajris-github
+    token:
+      secure: uRHm+GKVe8SHbjsVfLPfsY5D+upX6hStovdZO5W6qS0n/8dYQDlDUR/yciSt231AmRbCy9Q6YhG70dKiCKfoMETdsHC8e/NZ5HEDgh01zGo5M+1z10aAzVW3y8KVEPnrWa8c1zuaYsONesJ47BbGYt229sF8b0hrdyLBOH/vk+zTosHUTzBjwcvolAjK2koIviRevf5VKdvlzTzoe9r9o4QOfJESojBqvbMwRpxq3ZAKM1mLXYi6qcSp69coMX45HX/EKpFVNZG6SBkaObEvnG+kllMkDG1kEtwqzLE94isqOhRD/Uj8L118eX/o052hcEMq20M7048md6vMuUSjM3fqvEqF2cu3FTGIllyzOov3qmO64tJhz3mNdn8gh5uLGL7pqP/1g/pMw4E9mSlbh6iOcN2GdNOpZJ/DiAhTkJD0a97H063zuo7RTBqmv+mERKIHkb/J0fx2dnn3SzmsqjHpeWGfvXPekRG5feu4li20/xHWhulLGFoCrSBnYggrI4VAz2pI+6y8+2NzJ3Y87DsYfoI0H6j8E6mg7carlhL5EBgYPCdqoo15bQmPVJ1VeQBf9T8RJFA4bmqQiFHsnpx4n1hx98z+6QD1etTlPCuj+lVgHm6GK973hiksP1u3HEhy+Zm5uVJNdKZSmNGWbhQk3cIUdve6ZTFSfaqNTs4=
+
+script:
+  - "./gradlew sonarqube"
+
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then if [ "$TRAVIS_BRANCH"
+  == "master" ]; then echo "latest"; else echo "branch-$TRAVIS_BRANCH"; fi else echo
+  "pr-$TRAVIS_PULL_REQUEST_BRANCH"; fi`
+  - docker build -f Dockerfile -t $DOCKER_REPO:$COMMIT .
+  - docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG
+  - docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $DOCKER_REPO
