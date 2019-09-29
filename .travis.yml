@@ -22,13 +22,11 @@ addons:
       secure: uRHm+GKVe8SHbjsVfLPfsY5D+upX6hStovdZO5W6qS0n/8dYQDlDUR/yciSt231AmRbCy9Q6YhG70dKiCKfoMETdsHC8e/NZ5HEDgh01zGo5M+1z10aAzVW3y8KVEPnrWa8c1zuaYsONesJ47BbGYt229sF8b0hrdyLBOH/vk+zTosHUTzBjwcvolAjK2koIviRevf5VKdvlzTzoe9r9o4QOfJESojBqvbMwRpxq3ZAKM1mLXYi6qcSp69coMX45HX/EKpFVNZG6SBkaObEvnG+kllMkDG1kEtwqzLE94isqOhRD/Uj8L118eX/o052hcEMq20M7048md6vMuUSjM3fqvEqF2cu3FTGIllyzOov3qmO64tJhz3mNdn8gh5uLGL7pqP/1g/pMw4E9mSlbh6iOcN2GdNOpZJ/DiAhTkJD0a97H063zuo7RTBqmv+mERKIHkb/J0fx2dnn3SzmsqjHpeWGfvXPekRG5feu4li20/xHWhulLGFoCrSBnYggrI4VAz2pI+6y8+2NzJ3Y87DsYfoI0H6j8E6mg7carlhL5EBgYPCdqoo15bQmPVJ1VeQBf9T8RJFA4bmqQiFHsnpx4n1hx98z+6QD1etTlPCuj+lVgHm6GK973hiksP1u3HEhy+Zm5uVJNdKZSmNGWbhQk3cIUdve6ZTFSfaqNTs4=
 
 script:
-  - "./gradlew sonarqube"
+  - ./gradlew sonarqube
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - export TAG=`if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then if [ "$TRAVIS_BRANCH"
-  == "master" ]; then echo "latest"; else echo "branch-$TRAVIS_BRANCH"; fi else echo
-  "pr-$TRAVIS_PULL_REQUEST_BRANCH"; fi`
+  - export TAG=`if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "branch-$TRAVIS_BRANCH"; fi else echo "pr-$TRAVIS_PULL_REQUEST_BRANCH"; fi`
   - docker build -f Dockerfile -t $DOCKER_REPO:$COMMIT .
   - docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG
   - docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER
